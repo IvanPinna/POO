@@ -22,4 +22,33 @@ ostream& operator <<(ostream& os, const Pedido& p)
 
 //Versión Gerardo
 int Pedido::N_pedidos = 0;
-Pe
+Pedido::Pedido(Usuario_Pedido& up, Pedido_Articulo& pa, Usuario& u,
+	       const Tarjeta& t, const Fecha& fp)
+  :num_(N_pedidos + 1, tarjeta_(&t), fecha_(fp), total(0.0)
+{
+  if(u.n_articulos() == 0)  throw Vacio(u);
+  if(t.titular() != &u)  throw Impostor(u);
+  if(t.caducidad() < fp) throw Tarjeta::Caducada(t.caducidad());
+
+  for(auto c : u.compra() )
+    if(c.first->stock() < c.second) {
+      const_cast<Usuario::Articulos>(u.compra()) . clear();
+      throw SinStock(*c.first);
+    }
+
+  //Solución, recorremos una copia, mientras borramos en el original. 
+  Usuario::Articulos carro = u.compra();
+  for(auto c : carro) {
+    Articulo* ptrart = c.first;
+    unsigned int cantida = c.second;
+    double precio = ptrart->precio();
+
+    ptrart->stock() -= cantidad;
+    pa.pedir(*this, *ptart, precio, cantidad);
+    total_ += precio * cantidad;
+    u.compra(*ptrart, 0); //Para quitar del carrito. Problema: Mientras estamos recorriendo el contenedor le estamos quitando elementos. 
+  }
+
+  up.asocia(u, *this);
+  ++N_pedidos;
+}

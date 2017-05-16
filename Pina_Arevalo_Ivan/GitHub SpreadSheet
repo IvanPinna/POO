@@ -1,0 +1,9 @@
+Una vez que hemos modificado los archivos, para actualizarlo en GitHub.
+-git pull //Para descargar todo lo que hay en el repos.
+-git status //Para saber el estado actual del repositorio.
+-git add . //Para anadir todo empleamos el punto, sino decimos el fichero.
+-git commit -m "Descripcion" //Para indicar lo que hemos hecho.
+-git push //Sube todo lo que haya
+
+Una vez iniciado el ordenador, para sincronizar
+-git pull //Descargamos todo lo que haya en el repos en el equipo. 
