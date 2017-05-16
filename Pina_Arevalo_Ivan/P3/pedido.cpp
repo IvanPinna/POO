@@ -1,27 +1,9 @@
 #include "pedido.hpp"
-
-Pedido:: Pedido(Usuario_Pedido&  a,
-		Pedido_Articulo& b, const Usuario& u,
-		const Tarjeta& t, Fecha f = Fecha() )
-{
-  //Pasamos a implementar la clase de asociacion
-  //usuario-pedido
-}
-
-ostream& operator <<(ostream& os, const Pedido& p)
-{
-  return os << "Núm. pedido: " << p.numero() << std::endl
-	    << "Fecha:       " << p.fecha() << std::endl
-	    << "Pagado con : " << p.tarjeta()
-	    << " n.º: " p.tarjeta()->numero() << std:: endl
-	    << "Importe:     " << p.total()
-	    << " €" << endl;
-    
-};
-
+#include  "usuario_pedido.hpp"
 
 //Versión Gerardo
 int Pedido::N_pedidos = 0;
+
 Pedido::Pedido(Usuario_Pedido& up, Pedido_Articulo& pa, Usuario& u,
 	       const Tarjeta& t, const Fecha& fp)
   :num_(N_pedidos + 1, tarjeta_(&t), fecha_(fp), total(0.0)
@@ -46,9 +28,24 @@ Pedido::Pedido(Usuario_Pedido& up, Pedido_Articulo& pa, Usuario& u,
     ptrart->stock() -= cantidad;
     pa.pedir(*this, *ptart, precio, cantidad);
     total_ += precio * cantidad;
-    u.compra(*ptrart, 0); //Para quitar del carrito. Problema: Mientras estamos recorriendo el contenedor le estamos quitando elementos. 
+    u.compra(*ptrart, 0); //Para quitar del carrito.
+                          //Problema: Mientras estamos recorriendo el contenedor le estamos quitando elementos. 
   }
 
   up.asocia(u, *this);
   ++N_pedidos;
 }
+
+
+ostream& operator <<(ostream& os, const Pedido& p)
+{
+  return os << "Núm. pedido: " << p.numero() << std::endl
+	    << "Fecha:       " << p.fecha() << std::endl
+	    << "Pagado con : " << p.tarjeta()
+	    << " n.º: " p.tarjeta()->numero() << std:: endl
+	    << "Importe:     " << p.total()
+	    << " €" << endl;
+    
+};
+
+
