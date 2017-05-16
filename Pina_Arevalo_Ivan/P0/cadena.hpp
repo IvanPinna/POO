@@ -1,0 +1,82 @@
+/*
+ * File:   Cadena.hpp
+ * Author: Iván
+ *
+ * Created on 27 de marzo de 2017, 13:22
+ */
+
+#ifndef CADENA_HPP
+#define CADENA_HPP
+
+#include <cstring>
+#include <stdexcept>
+
+class Cadena{
+public:
+  const static std::size_t npos = -1;
+
+  //Los tres primeros constructores
+  explicit Cadena(std::size_t n = 0, char x = ' ');
+  
+  Cadena(const char* cad, std::size_t n = npos);
+  
+  Cadena(const Cadena& a, std::size_t inipos = 0,
+	 std::size_t n = npos);
+  
+  Cadena& operator =(const Cadena& nuevo);
+  Cadena& operator +=(const Cadena& concat);
+  
+  char operator [] (std::size_t n) const { return s_[n]; }
+  char& operator[] (std::size_t n) { return s_[n]; }
+  char at(std::size_t n) const;
+  char& at(std::size_t n);
+
+  //Operador de conversión implicita
+  operator const char*() const noexcept { return s_; }
+  
+  std::size_t length() const noexcept {return tam_; }
+  Cadena substr(std::size_t inipos, std::size_t n) const;
+  ~Cadena() { delete[] s_; s_ = nullptr; tam_ = 0; }
+  
+private:
+  char* s_;
+  std::size_t tam_;
+};
+
+inline Cadena operator +(const Cadena& a, const Cadena& b)
+{
+  return Cadena(a) += b;
+}
+
+inline bool operator ==(const Cadena& a, const Cadena& b) noexcept
+{
+  return std::strcmp(a, b) == 0;
+}
+
+inline bool operator!=(const Cadena& a, const Cadena& b) noexcept
+{
+  return !(a == b);
+}
+
+inline bool operator<(const Cadena& a, const Cadena& b) noexcept
+{
+  return std::strcmp(a, b) < 0;
+}
+
+inline bool operator>(const Cadena& a, const Cadena& b) noexcept
+{
+  return b < a;
+}
+
+inline bool operator<=(const Cadena& a, const Cadena& b) noexcept
+{
+  return !(b < a);
+}
+
+inline bool operator>=(const Cadena& a, const Cadena& b) noexcept
+{
+  return !(a < b);
+}
+
+#endif
+
