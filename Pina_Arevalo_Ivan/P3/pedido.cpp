@@ -18,7 +18,11 @@ Pedido::Pedido(Usuario_Pedido& up, Pedido_Articulo& pa, Usuario& u,
       throw SinStock(*c.first);
     }
 
-  //Solución, recorremos una copia, mientras borramos en el original. 
+  /*Para quitar del carrito.
+       -Problema: Mientras estamos recorriendo el contenedor 
+            le estamos quitando elementos.
+       -Solución: recorremos una copia, mientras borramos en 
+            el original*/ 
   Usuario::Articulos carro = u.compra();
   for(auto c : carro) {
     Articulo* ptrart = c.first;
@@ -28,8 +32,7 @@ Pedido::Pedido(Usuario_Pedido& up, Pedido_Articulo& pa, Usuario& u,
     ptrart->stock() -= cantidad;
     pa.pedir(*this, *ptart, precio, cantidad);
     total_ += precio * cantidad;
-    u.compra(*ptrart, 0); //Para quitar del carrito.
-                          //Problema: Mientras estamos recorriendo el contenedor le estamos quitando elementos. 
+    u.compra(*ptrart, 0);  
   }
 
   up.asocia(u, *this);

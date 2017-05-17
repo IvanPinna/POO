@@ -40,20 +40,6 @@ Usuario::~Usuario()
     pair.second->anula_titular();
 
   bd_.erase(id_);
-  
-  /* Equivalencias
-  for (type_expr varname : cont)
-    stmnt;
-
-  for (auto it = cont.begin(); it != cont.end(); ++it) {
-    type_expr varname = *it;
-
-    stmnt;
-  }
-  */
-  /*
-  for (auto it = tar_.begin(); it != tar_.end(); ++it)
-  (*it).second->anula_titular(); */
 }
 
 
