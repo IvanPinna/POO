@@ -1,10 +1,9 @@
 #include "pedido-articulo.hpp"
-
 #include <iomanip>
 
 std::ostream& operator<<(std::ostream& os, const LineaPedido& l)
 {
-  return os << setw(2) << l.precio_venta() << " €\t"
+  return os << setprecision(2) << fixed << l.precio_venta() << " €\t"
 	    << l.cantidad();
 }
 
@@ -21,8 +20,17 @@ pedir(const Pedido& p, const Articulo& a, double pvp, int c)
 std::ostream& operator <<(std::ostream& os,
 			  const Pedido_Articulo::ItemsPedido& cos)
 {
-  //Mas adelante
-
+  //Tenems que mostrar todos los items que componen un pedido. 
+  for(auto const& p : cos)
+  {
+    const Articulo *art = p.first;
+    const LineaPedido lp = p.second;
+    os << setprecision(2) << fixed
+       << lp.precio_venta() << " € " << lp.cantidad()
+       << " [" << art->referencia() << "] "
+       << art->titulo() << "\n";
+  }
+  
   return os;
 }
   
@@ -59,9 +67,12 @@ void Pedido_Articulo:: mostrarDetallePedidos(ostream& os) const
 
     total += pair.first->total();
   }
-  
-  os << "\n TOTAL VENTAS: " << setprecision(2) << fixed << total
-     << '\n';
+
+  os << setprecision(2) << fixed << total  << " €" << '\n';
+
+  /*
+  os << "\nTOTAL VENTAS: " << setprecision(2) << fixed << total
+  << '\n';*/
 }
 
 

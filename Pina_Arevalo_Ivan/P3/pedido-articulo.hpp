@@ -20,7 +20,7 @@ struct OrdenaPedidos
   }
 };
 
-class LineaPedido //FALTA IMPLEMENTAR 
+class LineaPedido  
 {
 public:
   LineaPedido(double p, int s = 1) : p_{p}, s_{s}
@@ -41,7 +41,7 @@ class Pedido_Articulo
 {
 public:
   typedef std::map<const Articulo*, LineaPedido,
-		   OrdenaArticulos> ItemsPedido;
+		   OrdenaArticulos>ItemsPedido;
   
   typedef std::map<const Pedido*, LineaPedido, OrdenaPedidos> Pedidos;
   
