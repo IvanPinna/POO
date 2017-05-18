@@ -4,31 +4,46 @@
 
 bool luhn(const Cadena& numero);
 
+void eliminarChar(Cadena& c, size_t pos)
+{
+  Cadena aux = c.substr(0, pos);
+
+  if( (pos + 1) < c.length() )
+    aux += Cadena(c, pos + 1);
+  c = move(aux);
+}
+
+//Por copia ya que se va a modificar la Cadena
 Numero::Numero(const Cadena& num)
 {
-    if (num.length() < 13)
-        throw Incorrecto(LONGITUD);
- 
-    char* tmp_num = new char[num.length() + 1]{'\0'};
-    size_t tmp_i = 0;
- 
-    for (char c : num) {
-         if (isspace(c))
-            continue;
- 
-         if (c < '0' or c > '9')
-              throw Incorrecto(DIGITOS);
- 
-         tmp_num[tmp_i++] = c;
-    }
- 
-    if (tmp_i < 13 or tmp_i > 19)
-        throw Incorrecto(LONGITUD);
- 
-    num_ = tmp_num;
- 
-    if (!luhn(num_))
-        throw Incorrecto(NO_VALIDO);
+  char* aux = new char[num.length() + 1]{'\0'};
+
+  size_t aux_i = 0;
+  
+  for (size_t i = 0; i < num.length(); ++i) {
+    if (isspace(num[i]))
+      //continue;
+      eliminarChar(num, i);
+    
+    if (num[i] < '0' or num[i] > '9')
+      throw Incorrecto(Razon::DIGITOS);
+
+    aux[aux_i++] = num[i];
+  }
+
+  num_ = aux;
+  delete[] aux;
+  
+  if (num_.length() < 13 or num_.length() > 19)
+    throw Incorrecto(Razon::LONGITUD);
+  
+  if (!luhn(num_))
+    throw Incorrecto(Razon::NO_VALIDO);
+  
+  num_ = num;
+
+  //Mostrar el num por la salida estándar.
+  //std::cout << num_ << std::endl;;
 }
 
 //CLASE TARJETA

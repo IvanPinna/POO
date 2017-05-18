@@ -156,7 +156,7 @@ istream& operator>>(istream& is, Fecha& a)
 
     // Must the exception be thrown or not? The test auto
     // doesn't catch it in the "Fecha no valid" case.
-    // throw;
+    throw;
   }
     
   return is;

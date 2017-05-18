@@ -4,12 +4,36 @@
 
 bool luhn(const Cadena& numero);
 
+Numero::Numero(const Cadena& num): numero_(num)
+  {
+                     //Genera un objeto temporal EsBlanco.
+  Cadena::iterator fin = std::remove_if(numero_.begin(),
+					numero_.end(), EsBlanco(),
+					[](char c){return std::isspace(c);} );
+  
+  *fin = 0; // '\0' '\x0'
+    
+  
+  if(fin != numero.end()){ //Solamente si el iterator esta en posicion distinta al final -> Ha habido modificaciones.
+    Cadena sd(numero_.c_str());
+    numero_ = sd;
+  }
+
+  if( std::find_if(std::begin(numero_), std::end(numero_), std::not1(std::function<bool(char)>(EsDigito())) ) != numero_.end())
+    throw Incorrecto(DIGITOS);
+  
+  std::size_t j = numero.length();
+  if(j < 13 or j >19) throw Incorrecto(LONGITUD);
+  if( not luhn(numero_)) throw Incorrecto(NO_VALIDO);
+}
+
+
 Numero::Numero(const Cadena& num)
 {
     if (num.length() < 13)
         throw Incorrecto(LONGITUD);
  
-    char* tmp_num = new char[num.length() + 1]{'\0'};
+    char* tmp_num = new char[num.length()]{'\0'};
     size_t tmp_i = 0;
  
     for (char c : num) {

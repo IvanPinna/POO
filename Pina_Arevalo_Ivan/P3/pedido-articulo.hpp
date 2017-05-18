@@ -2,40 +2,74 @@
 #define PEDIDO_ARTICULO_HPP
 
 #include "pedido.hpp"
+#include <iostream>
+
+struct OrdenaArticulos
+{
+  bool operator()(const Articulo* a, const Articulo* b) const
+  {
+    return a->referencia() < b->referencia();
+  }
+};
+
+struct OrdenaPedidos
+{
+  bool operator()(const Pedido* a, const Pedido* b) const
+  {
+    return a->numero() < b->numero();
+  }
+};
 
 class LineaPedido //FALTA IMPLEMENTAR 
 {
 public:
-private:.
+  LineaPedido(double p, int s = 1) : p_{p}, s_{s}
+  {}
+  const double precio_venta() const
+  {return p_;}
+  const int cantidad() const
+  {return s_;}
+  
+private:
+  double p_;
+  int s_;
 };
 
+ostream& operator<<(ostream& os, const LineaPedido& l);
 
-//Asociación bidireccional varios-a-varios con atributos de enlace entre pedido y articulo
 class Pedido_Articulo
 {
 public:
-  typedef std::map<Articulo*, LineaPedido, OrdenaArticulos> ItemsPedido;
-  typedef std::map<Pedido*, LineaPedido, OrdenaPedidos> Pedidos;
+  typedef std::map<const Articulo*, LineaPedido,
+		   OrdenaArticulos> ItemsPedido;
   
-  void pedir(const Pedido& p, const Articulo& a, double p,
-	     int c);
+  typedef std::map<const Pedido*, LineaPedido, OrdenaPedidos> Pedidos;
+  
+  void pedir(const Pedido& p, const Articulo& a, double pvp, int c);
 
-  void pedir( const Articulo& a, const Pedido& p, double p,
-	     int c);
+  void pedir(const Articulo& a, const Pedido& p, double pvp, int c)
+  { pedir(p, a, pvp, c); } 
 
   const ItemsPedido& detalle(const Pedido& p)
-  {return pedart_[p];} //Observa que le estas pasando la key.
+  {
+    //Problema: Si la posición no existe va a crear una nueva.
+    return pedart_[&p];
+  } //Observa que le estas pasando la key.
 
   const Pedidos& ventas(const Articulo& a)
-  {return artped_[a];}
-  
+  {return artped_[&a];}
+
+  void mostrarDetallePedidos(std::ostream& os) const;
+  void mostrarVentasArticulos(std::ostream& os) const;
 private:
-  std::map<Pedido*, ItemsPedido, OrdenaPedidos> pedart_;
-  std::map<Articulo*, Pedidos, OrdenaArticulos> artped_;
+  std::map<const Pedido*, ItemsPedido, OrdenaPedidos> pedart_;
+  std::map<const Articulo*, Pedidos, OrdenaArticulos> artped_;
 };
 
-ostream& operator <<(ostream& os, Pedido_Articulo::ItemsPedido);
-ostream& operator <<(ostream& os, Pedido_Articulo::Pedidos);
+std::ostream&
+operator<<(std::ostream& os, const Pedido_Articulo::ItemsPedido&);
 
+std::ostream&
+operator<<(std::ostream& os, const Pedido_Articulo::Pedidos&);
 
 #endif

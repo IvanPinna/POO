@@ -1,37 +1,45 @@
-3#ifndef PEDIDO_HPP_
+#ifndef PEDIDO_HPP_
 #define PEDIDO_HPP_
+
 #include "tarjeta.hpp"
+#include "usuario.hpp"
+#include "articulo.hpp"
+
+class Usuario_Pedido;
+class Pedido_Articulo;
 
 class Pedido{
 public:   //Necesario pasar por referencia para modificar los enlaces.
-  Pedido(Usuario_Pedido&  up, Pedido_Articulo& pa, const Usuario& u,
-	 const Tarjeta& t, const Fecha& f = Fecha() );
+  Pedido(Usuario_Pedido& p, Pedido_Articulo& pa, Usuario& u,
+	 const Tarjeta& t, const Fecha& f = Fecha());
 
-  Class Vacio{
+  class Vacio{
   public:
-    Vacio(const Usuario* p):p_(p)
+    Vacio(const Usuario& p):p_(&p)
       {};
-    const Usuario* usuario() const {return p_}
+    
+    const Usuario& usuario() const {return *p_; }
   private:
-    Usuario* p_;
+    const Usuario* p_;
   };
 
-  Class Impostor{
+  class Impostor{
   public:
-    Vacio(const Usuario* p):p_(p)
+    Impostor(const Usuario& p):p_(&p)
       {};
-    const Usuario* usuario() const {return p_}
+    const Usuario& usuario() const {return *p_; }
+    
   private:
-    Usuario* p_;
+    const Usuario* p_;
   };
 
-  Class SinStock{
+  class SinStock{
   public:
-    SinStock(const Usuario* a):a_(a)
+    SinStock(const Articulo& a):a_(&a)
       {};
-    const articulo* articulo() const {return a_;}
+    const Articulo& articulo() const {return *a_;}
   private:
-    Articulo* a_;
+    const Articulo* a_;
   };
 
   
@@ -40,21 +48,16 @@ public:   //Necesario pasar por referencia para modificar los enlaces.
   const Tarjeta* tarjeta() const  {return tarjeta_;}
   const Fecha& fecha() const {return fecha_;}
   double total() const {return total_;}
+
+  static int n_total_pedidos() { return N_pedidos; }
 private:
-  int N_pedidos;
+  static int N_pedidos;
   int num_;
-  Tarjeta* tarjeta_;;
+  const Tarjeta* tarjeta_;
   Fecha fecha_;
   double total_;
 };
 
 ostream& operator <<(ostream& os, const Pedido& p);
-
-
-/*TEMPORALMENTE: Definiremos aquí la clase LineaPedido*/
-class LineaPedido{
-public:
-private:
-};
 
 #endif

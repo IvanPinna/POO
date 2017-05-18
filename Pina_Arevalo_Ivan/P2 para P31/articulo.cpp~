@@ -1,0 +1,9 @@
+#include "articulo.hpp"
+
+ostream& operator << (ostream& os, const Articulo& a)
+{
+  cout << "[" << a.referencia() << "]"<< " " << " \""
+       << a.titulo() << " \", " << a.f_publi() << ". "
+       << a.precio() << "€"<< endl;
+  return os;
+}
